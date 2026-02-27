@@ -127,18 +127,7 @@
   .btn-modal-clear.show { display: block; }
   .btn-modal-cancel { background: var(--bg); color: var(--muted); border: none; border-radius: 9px; padding: 11px 14px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
-  /* Config screen */
-  .config-screen { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; }
-  .config-box { background: #fff; border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 420px; border: 1px solid var(--border); box-shadow: 0 8px 40px rgba(91,63,166,0.12); }
-  .config-box h2 { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 6px; }
-  .config-box p { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
-  .config-field { margin-bottom: 12px; }
-  .config-field label { display: block; font-size: 12px; font-weight: 700; color: var(--purple); margin-bottom: 5px; }
-  .config-field input { width: 100%; padding: 10px 12px; border-radius: 9px; border: 1.5px solid var(--border); font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none; color: var(--text); }
-  .config-field input:focus { border-color: var(--purple); }
-  .config-field input.error { border-color: var(--red); }
-  .btn-connect { width: 100%; background: var(--purple); color: #fff; border: none; border-radius: 10px; padding: 13px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 8px; }
-  .config-error { font-size: 12px; color: var(--red); margin-top: 8px; display: none; }
+
 
   @media (max-width: 400px) {
     .form-grid { grid-template-columns: 1fr; }
@@ -148,33 +137,7 @@
 </head>
 <body>
 
-<!-- Config Screen (shown if no Firebase config saved) -->
-<div class="config-screen" id="configScreen">
-  <div class="config-box">
-    <h2>🔥 Connect Firebase</h2>
-    <p>Enter your Firebase project config below to enable real-time sync between you and Gaurav. You only need to do this once.</p>
-    <div class="config-field">
-      <label>API Key</label>
-      <input id="cfgApiKey" placeholder="AIzaSy..." />
-    </div>
-    <div class="config-field">
-      <label>Auth Domain</label>
-      <input id="cfgAuthDomain" placeholder="your-project.firebaseapp.com" />
-    </div>
-    <div class="config-field">
-      <label>Project ID</label>
-      <input id="cfgProjectId" placeholder="your-project-id" />
-    </div>
-    <div class="config-field">
-      <label>App ID</label>
-      <input id="cfgAppId" placeholder="1:123456:web:abc123" />
-    </div>
-    <button class="btn-connect" onclick="saveConfig()">Connect & Start Tracking</button>
-    <div class="config-error" id="configError">Please fill in all fields.</div>
-  </div>
-</div>
-
-<div class="app" id="mainApp" style="display:none">
+<div class="app" id="mainApp">
   <div class="header">
     <span class="header-emoji">✈️ 🌉</span>
     <h1>San Francisco Trip</h1>
@@ -276,33 +239,16 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, getDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ── Config helpers ──────────────────────────────────────────────
-const CFG_KEY = 'sf-firebase-config';
-
-window.saveConfig = function() {
-  const cfg = {
-    apiKey:      document.getElementById('cfgApiKey').value.trim(),
-    authDomain:  document.getElementById('cfgAuthDomain').value.trim(),
-    projectId:   document.getElementById('cfgProjectId').value.trim(),
-    appId:       document.getElementById('cfgAppId').value.trim(),
-  };
-  if (!cfg.apiKey || !cfg.authDomain || !cfg.projectId || !cfg.appId) {
-    document.getElementById('configError').style.display = 'block';
-    return;
-  }
-  localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
-  location.reload();
+// ── Hardcoded Firebase config ───────────────────────────────────
+const savedCfg = {
+  apiKey:      "AIzaSyBOwt8sUIMBX_lQphkRA_kUwWmNL2D3BUA",
+  authDomain:  "sf-trip-tracker.firebaseapp.com",
+  projectId:   "sf-trip-tracker",
+  appId:       "1:604114819430:web:3165deed554c45dfb110a7",
 };
 
-const savedCfg = (() => { try { return JSON.parse(localStorage.getItem(CFG_KEY)); } catch { return null; } })();
-
-if (!savedCfg) {
-  document.getElementById('configScreen').style.display = 'flex';
-} else {
-  document.getElementById('configScreen').style.display = 'none';
-  document.getElementById('mainApp').style.display = 'block';
-  initApp(savedCfg);
-}
+document.getElementById('mainApp').style.display = 'block';
+initApp(savedCfg);
 
 // ── App ──────────────────────────────────────────────────────────
 function initApp(cfg) {
