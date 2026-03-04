@@ -20,10 +20,7 @@
   body { padding-bottom: env(safe-area-inset-bottom); }
   .app { max-width: 680px; margin: 0 auto; padding: 0 0 80px; }
 
-  .header {
-    background: linear-gradient(160deg, var(--purple-dark) 0%, var(--purple) 60%, var(--purple-light) 100%);
-    padding: 48px 20px 28px; text-align: center; position: relative; overflow: hidden;
-  }
+  .header { background: linear-gradient(160deg, var(--purple-dark) 0%, var(--purple) 60%, var(--purple-light) 100%); padding: 48px 20px 28px; text-align: center; position: relative; overflow: hidden; }
   .header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.08) 0%, transparent 60%); }
   .header-emoji { font-size: 32px; margin-bottom: 8px; display: block; }
   .header h1 { font-family: 'DM Serif Display', serif; color: #fff; font-size: 26px; font-weight: 400; letter-spacing: -0.3px; }
@@ -40,7 +37,8 @@
   .summary-card .value { font-size: 20px; font-weight: 700; color: var(--text); }
 
   .payments-row { padding: 10px 16px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .pay-card { border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; border: 1px solid; }
+  .pay-card { border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; border: 1px solid; cursor: pointer; transition: opacity 0.15s; }
+  .pay-card:active { opacity: 0.8; }
   .pay-card.j2g { background: #f3eeff; border-color: #d4bfff; }
   .pay-card.g2j { background: #e8f3ff; border-color: #b5d4f5; }
   .pay-card .pay-label { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
@@ -49,6 +47,7 @@
   .pay-card .pay-value { font-size: 17px; font-weight: 700; }
   .pay-card.j2g .pay-value { color: var(--purple); }
   .pay-card.g2j .pay-value { color: var(--blue); }
+  .pay-card .pay-hint { font-size: 10px; color: var(--muted); margin-top: 1px; }
 
   .settlement { margin: 10px 16px 0; border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .settlement.owe { background: var(--red); }
@@ -87,47 +86,62 @@
   .exp-name { font-weight: 600; font-size: 14px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .exp-meta { font-size: 11px; color: var(--muted); margin-top: 3px; display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
   .cat-badge { padding: 2px 7px; border-radius: 10px; font-weight: 600; font-size: 10px; }
-  .pay-indicator { font-weight: 600; }
-  .pay-indicator.j2g { color: var(--purple); }
-  .pay-indicator.g2j { color: var(--blue); }
   .exp-amounts { text-align: right; flex-shrink: 0; }
   .exp-total { font-weight: 700; font-size: 15px; }
   .exp-each { font-size: 11px; color: var(--muted); margin-top: 1px; }
   .exp-actions { display: flex; gap: 5px; flex-shrink: 0; }
-  .btn-pay { border: none; border-radius: 6px; padding: 5px 8px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .btn-pay.paid { background: #e8f8f1; color: var(--green); }
-  .btn-pay.unpaid { background: #fff8e8; color: #b07d00; }
   .btn-edit { background: #f0ecff; color: var(--purple); border: none; border-radius: 6px; padding: 5px 8px; font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
   .btn-del { background: #fff0f0; color: var(--red); border: none; border-radius: 6px; padding: 5px 8px; font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
   .empty { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
   .loading-state { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
-
   .card-footer { padding: 12px 14px; background: #f9f6ff; border-top: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
   .card-footer .count { font-size: 12px; color: var(--muted); }
   .card-footer .total { font-weight: 800; font-size: 15px; color: var(--purple); }
 
+  /* Payment Log Card */
+  .log-card { margin: 12px 16px 0; background: var(--card); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(91,63,166,0.08); }
+  .log-header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .log-header h3 { font-size: 14px; font-weight: 700; color: var(--text); }
+  .log-entry { padding: 11px 14px; border-bottom: 1px solid #f8f6ff; display: flex; align-items: center; gap: 10px; }
+  .log-entry:last-child { border-bottom: none; }
+  .log-entry:nth-child(even) { background: #fdfcff; }
+  .log-direction { font-size: 18px; flex-shrink: 0; }
+  .log-info { flex: 1; min-width: 0; }
+  .log-desc { font-size: 13px; font-weight: 600; color: var(--text); }
+  .log-desc.j2g { color: var(--purple); }
+  .log-desc.g2j { color: var(--blue); }
+  .log-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .log-note { font-size: 11px; color: var(--muted); font-style: italic; }
+  .log-amount { font-weight: 700; font-size: 15px; flex-shrink: 0; }
+  .log-amount.j2g { color: var(--purple); }
+  .log-amount.g2j { color: var(--blue); }
+  .btn-log-del { background: #fff0f0; color: var(--red); border: none; border-radius: 6px; padding: 5px 8px; font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
+  .log-empty { padding: 24px; text-align: center; color: var(--muted); font-size: 13px; }
+
+  /* Modal */
   .modal-overlay { position: fixed; inset: 0; background: rgba(20,10,40,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; backdrop-filter: blur(3px); }
   .modal-overlay.open { display: flex; }
-  .modal { background: #fff; border-radius: 18px; padding: 22px; width: 100%; max-width: 360px; box-shadow: 0 24px 60px rgba(0,0,0,0.25); }
+  .modal { background: #fff; border-radius: 18px; padding: 22px; width: 100%; max-width: 360px; box-shadow: 0 24px 60px rgba(0,0,0,0.25); max-height: 90vh; overflow-y: auto; }
   .modal h3 { font-family: 'DM Serif Display', serif; font-size: 18px; font-weight: 400; color: var(--text); margin-bottom: 4px; }
   .modal .modal-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
   .modal-field { margin-bottom: 14px; }
   .modal-field label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
   .modal-field label.lbl-j2g { color: var(--purple); }
   .modal-field label.lbl-g2j { color: var(--blue); }
-  .modal-field input { width: 100%; padding: 10px 12px; border-radius: 9px; font-size: 15px; font-family: 'DM Sans', sans-serif; outline: none; color: var(--text); border: 2px solid; }
+  .modal-field input, .modal-field select, .modal-field textarea { width: 100%; padding: 10px 12px; border-radius: 9px; font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none; color: var(--text); border: 2px solid var(--border); background: #fff; }
   .modal-field input.inp-j2g { border-color: #d4bfff; background: #faf5ff; }
   .modal-field input.inp-j2g:focus { border-color: var(--purple); }
   .modal-field input.inp-g2j { border-color: #b5d4f5; background: #f0f7ff; }
   .modal-field input.inp-g2j:focus { border-color: var(--blue); }
+  .modal-field textarea { resize: none; height: 60px; font-size: 13px; }
   .modal-actions { display: flex; gap: 8px; margin-top: 18px; }
   .btn-modal-save { flex: 1; background: var(--purple); color: #fff; border: none; border-radius: 9px; padding: 11px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .btn-modal-clear { background: #fff0f0; color: var(--red); border: none; border-radius: 9px; padding: 11px 14px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; display: none; }
-  .btn-modal-clear.show { display: block; }
   .btn-modal-cancel { background: var(--bg); color: var(--muted); border: none; border-radius: 9px; padding: 11px 14px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-
-
+  .direction-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+  .dir-btn { padding: 9px; border-radius: 9px; border: 2px solid var(--border); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; background: #fff; color: var(--muted); text-align: center; transition: all 0.15s; }
+  .dir-btn.active-j2g { border-color: var(--purple); background: #f3eeff; color: var(--purple); }
+  .dir-btn.active-g2j { border-color: var(--blue); background: #e8f3ff; color: var(--blue); }
 
   @media (max-width: 400px) {
     .form-grid { grid-template-columns: 1fr; }
@@ -136,7 +150,6 @@
 </style>
 </head>
 <body>
-
 <div class="app" id="mainApp">
   <div class="header">
     <span class="header-emoji">✈️ 🌉</span>
@@ -156,12 +169,20 @@
   </div>
 
   <div class="payments-row">
-    <div class="pay-card j2g">
-      <div><div class="pay-label">Jayat → Gaurav</div><div class="pay-value" id="totalJ2G">$0.00</div></div>
+    <div class="pay-card j2g" onclick="openPaymentModal('j2g')">
+      <div>
+        <div class="pay-label">Jayat → Gaurav</div>
+        <div class="pay-value" id="totalJ2G">$0.00</div>
+        <div class="pay-hint">Tap to log payment</div>
+      </div>
       <span style="font-size:20px">💸</span>
     </div>
-    <div class="pay-card g2j">
-      <div><div class="pay-label">Gaurav → Jayat</div><div class="pay-value" id="totalG2J">$0.00</div></div>
+    <div class="pay-card g2j" onclick="openPaymentModal('g2j')">
+      <div>
+        <div class="pay-label">Gaurav → Jayat</div>
+        <div class="pay-value" id="totalG2J">$0.00</div>
+        <div class="pay-hint">Tap to log payment</div>
+      </div>
       <span style="font-size:20px">💸</span>
     </div>
   </div>
@@ -173,10 +194,18 @@
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
       <div class="settle-amount" id="settlementAmount" style="display:none"></div>
-      <button class="btn-log" onclick="openPaymentModal('general')">💳 Log Payment</button>
     </div>
   </div>
 
+  <!-- Payment Log -->
+  <div class="log-card">
+    <div class="log-header">
+      <h3>💳 Payment History</h3>
+    </div>
+    <div id="paymentLog"><div class="log-empty">No payments logged yet.</div></div>
+  </div>
+
+  <!-- Expenses -->
   <div class="main-card">
     <div class="toolbar">
       <div class="filters" id="filters"></div>
@@ -215,287 +244,304 @@
 <!-- Payment Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
-    <h3 id="modalTitle">💳 Log Payments</h3>
+    <h3 id="modalTitle">💳 Log Payment</h3>
     <div class="modal-sub" id="modalSub"></div>
-    <div class="modal-field">
-      <label class="lbl-j2g">💸 Jayat paid Gaurav</label>
-      <input class="inp-j2g" id="inpJ2G" type="number" placeholder="Amount $" min="0" step="0.01" />
+    <div class="direction-toggle">
+      <button class="dir-btn active-j2g" id="dirJ2G" onclick="setDirection('j2g')">💸 Jayat → Gaurav</button>
+      <button class="dir-btn" id="dirG2J" onclick="setDirection('g2j')">💸 Gaurav → Jayat</button>
     </div>
     <div class="modal-field">
-      <label class="lbl-g2j">💸 Gaurav paid Jayat</label>
-      <input class="inp-g2j" id="inpG2J" type="number" placeholder="Amount $" min="0" step="0.01" />
+      <label id="amountLabel" class="lbl-j2g">Amount</label>
+      <input id="inpAmount" type="number" placeholder="$0.00" min="0" step="0.01" class="inp-j2g" />
+    </div>
+    <div class="modal-field">
+      <label style="color:var(--muted)">Note (optional)</label>
+      <textarea id="inpNote" placeholder="e.g. Interac transfer, cash..."></textarea>
     </div>
     <div class="modal-actions">
-      <button class="btn-modal-save" onclick="savePayment()">Save</button>
-      <button class="btn-modal-clear" id="btnClear" onclick="clearPayment()">Clear</button>
+      <button class="btn-modal-save" onclick="savePayment()">Add Payment</button>
       <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
     </div>
   </div>
 </div>
 
-<!-- Firebase SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, getDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ── Hardcoded Firebase config ───────────────────────────────────
-const savedCfg = {
-  apiKey:      "AIzaSyBOwt8sUIMBX_lQphkRA_kUwWmNL2D3BUA",
-  authDomain:  "sf-trip-tracker.firebaseapp.com",
-  projectId:   "sf-trip-tracker",
-  appId:       "1:604114819430:web:3165deed554c45dfb110a7",
+const FIREBASE_CONFIG = {
+  apiKey:     "AIzaSyBOwt8sUIMBX_lQphkRA_kUwWmNL2D3BUA",
+  authDomain: "sf-trip-tracker.firebaseapp.com",
+  projectId:  "sf-trip-tracker",
+  appId:      "1:604114819430:web:3165deed554c45dfb110a7",
 };
 
-document.getElementById('mainApp').style.display = 'block';
-initApp(savedCfg);
+const app = initializeApp(FIREBASE_CONFIG);
+const db  = getFirestore(app);
 
-// ── App ──────────────────────────────────────────────────────────
-function initApp(cfg) {
-  const app = initializeApp(cfg);
-  const db  = getFirestore(app);
+const EXPENSES_COL  = collection(db, 'expenses');
+const PAYMENTS_COL  = collection(db, 'payments');  // now a collection of transactions
+const SEED_DOC      = doc(db, 'meta', 'seeded');
 
-  const EXPENSES_COL  = collection(db, 'expenses');
-  const PAYMENTS_DOC  = doc(db, 'meta', 'payments');
-  const SEED_DOC      = doc(db, 'meta', 'seeded');
+const CAT_DOT  = { Accommodation:"#2980b9", Food:"#f39c12", Activities:"#27ae60", Transport:"#8e44ad", Other:"#7f8c8d" };
+const CAT_BG   = { Accommodation:"#e8f4fd", Food:"#fef9e7", Activities:"#eafaf1", Transport:"#fdf2f8", Other:"#f2f3f4" };
+const CATEGORIES = ["Accommodation","Food","Activities","Transport","Other"];
+const INITIAL_EXPENSES = [
+  { description:"AirBnB stay at San Diego",   total:1100.00, paidBy:"Gaurav", category:"Accommodation" },
+  { description:"Hotel stay at Santa Maria",  total:392.18,  paidBy:"Gaurav", category:"Accommodation" },
+  { description:"SeaWorld San Diego tickets", total:521.91,  paidBy:"Gaurav", category:"Activities"    },
+];
 
-  const CAT_DOT  = { Accommodation:"#2980b9", Food:"#f39c12", Activities:"#27ae60", Transport:"#8e44ad", Other:"#7f8c8d" };
-  const CAT_BG   = { Accommodation:"#e8f4fd", Food:"#fef9e7", Activities:"#eafaf1", Transport:"#fdf2f8", Other:"#f2f3f4" };
-  const CATEGORIES = ["Accommodation","Food","Activities","Transport","Other"];
-  const INITIAL_EXPENSES = [
-    { description:"AirBnB stay at San Diego",     total:1100.00, paidBy:"Gaurav", category:"Accommodation" },
-    { description:"Hotel stay at Santa Maria",    total:392.18,  paidBy:"Gaurav", category:"Accommodation" },
-    { description:"SeaWorld San Diego tickets",   total:521.91,  paidBy:"Gaurav", category:"Activities"    },
-  ];
+let expenses = [], paymentTxns = [], filter = "All", editId = null;
+let paymentDirection = 'j2g'; // current modal direction
+const fmt = n => '$' + Number(n).toFixed(2);
 
-  let expenses = [], payments = {}, filter = "All", editId = null, paymentModalKey = null;
-  const fmt = n => '$' + Number(n).toFixed(2);
+const fmtDate = ts => {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('en-CA', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+};
 
-  // Seed initial expenses once
-  async function seedIfNeeded() {
-    const snap = await getDoc(SEED_DOC);
-    if (!snap.exists()) {
-      for (const e of INITIAL_EXPENSES) await addDoc(EXPENSES_COL, { ...e, createdAt: serverTimestamp() });
-      await setDoc(SEED_DOC, { done: true });
-    }
+// Seed
+async function seedIfNeeded() {
+  const snap = await getDoc(SEED_DOC);
+  if (!snap.exists()) {
+    for (const e of INITIAL_EXPENSES) await addDoc(EXPENSES_COL, { ...e, createdAt: serverTimestamp() });
+    await setDoc(SEED_DOC, { done: true });
   }
-
-  // Sync status
-  function setSync(state) {
-    const dot = document.getElementById('syncDot');
-    const lbl = document.getElementById('syncLabel');
-    dot.className = 'sync-dot ' + state;
-    lbl.textContent = state === 'online' ? 'Live sync on' : state === 'connecting' ? 'Connecting...' : 'Offline';
-  }
-
-  // Listen to expenses
-  onSnapshot(EXPENSES_COL, snap => {
-    setSync('online');
-    expenses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    expenses.sort((a,b) => (a.createdAt?.seconds||0) - (b.createdAt?.seconds||0));
-    render();
-  }, () => setSync('offline'));
-
-  // Listen to payments
-  onSnapshot(PAYMENTS_DOC, snap => {
-    payments = snap.exists() ? snap.data() : {};
-    render();
-  });
-
-  seedIfNeeded();
-
-  // ── Render ───────────────────────────────────────────────────
-  function render() { renderSummary(); renderFilters(); renderList(); }
-
-  function renderSummary() {
-    const jayatPaid  = expenses.filter(e=>e.paidBy==="Jayat").reduce((s,e)=>s+e.total,0);
-    const gauravPaid = expenses.filter(e=>e.paidBy==="Gaurav").reduce((s,e)=>s+e.total,0);
-    const total = expenses.reduce((s,e)=>s+e.total,0);
-    const each  = total / 2;
-    const j2g   = Object.values(payments).reduce((s,v)=>s+(parseFloat(v?.jayatToGaurav)||0),0);
-    const g2j   = Object.values(payments).reduce((s,v)=>s+(parseFloat(v?.gauravToJayat)||0),0);
-    const net   = (jayatPaid - each) + j2g - g2j;
-
-    document.getElementById('totalShared').textContent  = fmt(total);
-    document.getElementById('eachOwes').textContent     = fmt(each);
-    document.getElementById('jayatPaid').textContent    = fmt(jayatPaid);
-    document.getElementById('gauravPaid').textContent   = fmt(gauravPaid);
-    document.getElementById('totalJ2G').textContent     = fmt(j2g);
-    document.getElementById('totalG2J').textContent     = fmt(g2j);
-
-    const banner = document.getElementById('settlementBanner');
-    const msg    = document.getElementById('settlementMsg');
-    const amt    = document.getElementById('settlementAmount');
-    document.getElementById('settlementSub').textContent = `Each family's share: ${fmt(each)}`;
-
-    if (net === 0) {
-      banner.className = 'settlement even';
-      msg.textContent = '✅ Fully settled up!';
-      amt.style.display = 'none';
-    } else if (net > 0) {
-      banner.className = 'settlement owed';
-      msg.textContent = '💸 Gaurav still owes Jayat';
-      amt.textContent = fmt(Math.abs(net)); amt.style.display = 'block';
-    } else {
-      banner.className = 'settlement owe';
-      msg.textContent = '💸 Jayat still owes Gaurav';
-      amt.textContent = fmt(Math.abs(net)); amt.style.display = 'block';
-    }
-  }
-
-  function renderFilters() {
-    document.getElementById('filters').innerHTML = ["All",...CATEGORIES].map(cat =>
-      `<button class="filter-btn ${filter===cat?'active':''}" onclick="window._setFilter('${cat}')">${cat}</button>`
-    ).join('');
-  }
-
-  function renderList() {
-    const filtered = filter==="All" ? expenses : expenses.filter(e=>e.category===filter);
-    const el = document.getElementById('expenseList');
-    const footer = document.getElementById('cardFooter');
-
-    if (filtered.length === 0) {
-      el.innerHTML = '<div class="empty">No expenses yet. Tap + Add Expense to get started.</div>';
-      footer.style.display = 'none'; return;
-    }
-
-    el.innerHTML = filtered.map((exp, i) => {
-      const p = payments[exp.id] || {};
-      const hasPayment = (p.jayatToGaurav > 0) || (p.gauravToJayat > 0);
-      const dot = CAT_DOT[exp.category]||'#ccc', bg = CAT_BG[exp.category]||'#f5f5f5';
-      const payIndicators = [
-        p.jayatToGaurav > 0 ? `<span class="pay-indicator j2g">· J→G: ${fmt(p.jayatToGaurav)}</span>` : '',
-        p.gauravToJayat > 0 ? `<span class="pay-indicator g2j">· G→J: ${fmt(p.gauravToJayat)}</span>` : '',
-      ].join('');
-      return `
-        <div class="expense-row">
-          <div class="dot" style="background:${dot}"></div>
-          <div class="exp-info">
-            <div class="exp-name">${exp.description}</div>
-            <div class="exp-meta">
-              <span class="cat-badge" style="background:${bg};color:${dot}">${exp.category}</span>
-              <span>Paid by <strong>${exp.paidBy}</strong></span>
-              ${payIndicators}
-            </div>
-          </div>
-          <div class="exp-amounts">
-            <div class="exp-total">${fmt(exp.total)}</div>
-            <div class="exp-each">each: ${fmt(exp.total/2)}</div>
-          </div>
-          <div class="exp-actions">
-            <button class="btn-pay ${hasPayment?'paid':'unpaid'}" onclick="window._openPayment('${exp.id}')">${hasPayment?'✓ 💳':'💳'}</button>
-            <button class="btn-edit" onclick="window._editExp('${exp.id}')">Edit</button>
-            <button class="btn-del"  onclick="window._delExp('${exp.id}')">✕</button>
-          </div>
-        </div>`;
-    }).join('');
-
-    const filteredTotal = filtered.reduce((s,e)=>s+e.total,0);
-    document.getElementById('footerCount').textContent = `${filtered.length} expense${filtered.length!==1?'s':''}`;
-    document.getElementById('footerTotal').textContent = `Total: ${fmt(filteredTotal)}`;
-    footer.style.display = 'flex';
-  }
-
-  // ── Expense CRUD ─────────────────────────────────────────────
-  window._setFilter = f => { filter = f; render(); };
-
-  window.toggleForm = function() {
-    const form = document.getElementById('expenseForm');
-    if (form.classList.contains('open')) { cancelForm(); return; }
-    editId = null;
-    document.getElementById('fDesc').value = '';
-    document.getElementById('fAmount').value = '';
-    document.getElementById('fPaidBy').value = 'Jayat';
-    document.getElementById('fCategory').value = 'Other';
-    document.getElementById('btnSave').textContent = 'Add';
-    form.classList.add('open');
-    document.getElementById('fDesc').focus();
-  };
-
-  window.cancelForm = function() {
-    document.getElementById('expenseForm').classList.remove('open');
-    editId = null;
-  };
-
-  window.submitForm = async function() {
-    const desc     = document.getElementById('fDesc').value.trim();
-    const amount   = parseFloat(document.getElementById('fAmount').value);
-    const paidBy   = document.getElementById('fPaidBy').value;
-    const category = document.getElementById('fCategory').value;
-    if (!desc || isNaN(amount) || amount <= 0) return;
-    if (editId) {
-      await updateDoc(doc(db,'expenses',editId), { description:desc, total:amount, paidBy, category });
-      editId = null;
-    } else {
-      await addDoc(EXPENSES_COL, { description:desc, total:amount, paidBy, category, createdAt:serverTimestamp() });
-    }
-    cancelForm();
-  };
-
-  window._editExp = function(id) {
-    const exp = expenses.find(e=>e.id===id); if (!exp) return;
-    editId = id;
-    document.getElementById('fDesc').value     = exp.description;
-    document.getElementById('fAmount').value   = exp.total;
-    document.getElementById('fPaidBy').value   = exp.paidBy;
-    document.getElementById('fCategory').value = exp.category;
-    document.getElementById('btnSave').textContent = 'Save Changes';
-    document.getElementById('expenseForm').classList.add('open');
-    document.getElementById('fDesc').focus();
-  };
-
-  window._delExp = async function(id) {
-    if (!confirm('Delete this expense?')) return;
-    await deleteDoc(doc(db,'expenses',id));
-    // Remove payment entry for this expense
-    const updated = { ...payments }; delete updated[id];
-    await setDoc(PAYMENTS_DOC, updated);
-  };
-
-  // ── Payment Modal ────────────────────────────────────────────
-  window.openPaymentModal = window._openPayment = function(key) {
-    paymentModalKey = key;
-    const p = payments[key] || {};
-    document.getElementById('inpJ2G').value = p.jayatToGaurav || '';
-    document.getElementById('inpG2J').value = p.gauravToJayat || '';
-    if (key === 'general') {
-      document.getElementById('modalTitle').textContent = '💳 Log Overall Payments';
-      document.getElementById('modalSub').textContent   = 'Record a lump-sum settlement between you and Gaurav.';
-    } else {
-      const exp = expenses.find(e=>e.id===key);
-      document.getElementById('modalTitle').textContent = '💳 Log Payment for Expense';
-      document.getElementById('modalSub').innerHTML = exp
-        ? `<strong>${exp.description}</strong><br>Your share: <strong>${fmt(exp.total/2)}</strong>` : '';
-    }
-    document.getElementById('btnClear').classList.toggle('show', payments[key] !== undefined);
-    document.getElementById('modalOverlay').classList.add('open');
-    document.getElementById('inpJ2G').focus();
-  };
-
-  window.savePayment = async function() {
-    const j2g = parseFloat(document.getElementById('inpJ2G').value) || 0;
-    const g2j = parseFloat(document.getElementById('inpG2J').value) || 0;
-    const updated = { ...payments };
-    if (j2g === 0 && g2j === 0) delete updated[paymentModalKey];
-    else updated[paymentModalKey] = { jayatToGaurav:j2g, gauravToJayat:g2j };
-    await setDoc(PAYMENTS_DOC, updated);
-    closeModal();
-  };
-
-  window.clearPayment = async function() {
-    const updated = { ...payments }; delete updated[paymentModalKey];
-    await setDoc(PAYMENTS_DOC, updated);
-    closeModal();
-  };
-
-  window.closeModal = function() {
-    document.getElementById('modalOverlay').classList.remove('open');
-    paymentModalKey = null;
-  };
-
-  document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === document.getElementById('modalOverlay')) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 }
+
+// Sync status
+function setSync(state) {
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  dot.className = 'sync-dot ' + state;
+  lbl.textContent = state==='online' ? 'Live sync on' : state==='connecting' ? 'Connecting...' : 'Offline';
+}
+
+// Listeners
+onSnapshot(EXPENSES_COL, snap => {
+  setSync('online');
+  expenses = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  expenses.sort((a,b) => (a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
+  render();
+}, () => setSync('offline'));
+
+onSnapshot(PAYMENTS_COL, snap => {
+  paymentTxns = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  paymentTxns.sort((a,b) => (a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
+  render();
+});
+
+seedIfNeeded();
+
+// ── Render ───────────────────────────────────────────────────────
+function render() { renderSummary(); renderFilters(); renderList(); renderPaymentLog(); }
+
+function renderSummary() {
+  const jayatPaid  = expenses.filter(e=>e.paidBy==="Jayat").reduce((s,e)=>s+e.total,0);
+  const gauravPaid = expenses.filter(e=>e.paidBy==="Gaurav").reduce((s,e)=>s+e.total,0);
+  const total = expenses.reduce((s,e)=>s+e.total,0);
+  const each  = total/2;
+  const j2g = paymentTxns.filter(p=>p.direction==='j2g').reduce((s,p)=>s+p.amount,0);
+  const g2j = paymentTxns.filter(p=>p.direction==='g2j').reduce((s,p)=>s+p.amount,0);
+  const net = (jayatPaid - each) + j2g - g2j;
+
+  document.getElementById('totalShared').textContent  = fmt(total);
+  document.getElementById('eachOwes').textContent     = fmt(each);
+  document.getElementById('jayatPaid').textContent    = fmt(jayatPaid);
+  document.getElementById('gauravPaid').textContent   = fmt(gauravPaid);
+  document.getElementById('totalJ2G').textContent     = fmt(j2g);
+  document.getElementById('totalG2J').textContent     = fmt(g2j);
+
+  const banner = document.getElementById('settlementBanner');
+  const msg    = document.getElementById('settlementMsg');
+  const amt    = document.getElementById('settlementAmount');
+  document.getElementById('settlementSub').textContent = `Each family's share: ${fmt(each)}`;
+
+  if (net===0) {
+    banner.className='settlement even'; msg.textContent='✅ Fully settled up!'; amt.style.display='none';
+  } else if (net>0) {
+    banner.className='settlement owed'; msg.textContent='💸 Gaurav still owes Jayat';
+    amt.textContent=fmt(Math.abs(net)); amt.style.display='block';
+  } else {
+    banner.className='settlement owe'; msg.textContent='💸 Jayat still owes Gaurav';
+    amt.textContent=fmt(Math.abs(net)); amt.style.display='block';
+  }
+}
+
+function renderFilters() {
+  document.getElementById('filters').innerHTML = ["All",...CATEGORIES].map(cat =>
+    `<button class="filter-btn ${filter===cat?'active':''}" onclick="window._setFilter('${cat}')">${cat}</button>`
+  ).join('');
+}
+
+function renderList() {
+  const filtered = filter==="All" ? expenses : expenses.filter(e=>e.category===filter);
+  const el = document.getElementById('expenseList');
+  const footer = document.getElementById('cardFooter');
+  if (filtered.length===0) {
+    el.innerHTML='<div class="empty">No expenses yet. Tap + Add Expense to get started.</div>';
+    footer.style.display='none'; return;
+  }
+  el.innerHTML = filtered.map(exp => {
+    const dot=CAT_DOT[exp.category]||'#ccc', bg=CAT_BG[exp.category]||'#f5f5f5';
+    return `
+      <div class="expense-row">
+        <div class="dot" style="background:${dot}"></div>
+        <div class="exp-info">
+          <div class="exp-name">${exp.description}</div>
+          <div class="exp-meta">
+            <span class="cat-badge" style="background:${bg};color:${dot}">${exp.category}</span>
+            <span>Paid by <strong>${exp.paidBy}</strong></span>
+          </div>
+        </div>
+        <div class="exp-amounts">
+          <div class="exp-total">${fmt(exp.total)}</div>
+          <div class="exp-each">each: ${fmt(exp.total/2)}</div>
+        </div>
+        <div class="exp-actions">
+          <button class="btn-edit" onclick="window._editExp('${exp.id}')">Edit</button>
+          <button class="btn-del"  onclick="window._delExp('${exp.id}')">✕</button>
+        </div>
+      </div>`;
+  }).join('');
+  const filteredTotal = filtered.reduce((s,e)=>s+e.total,0);
+  document.getElementById('footerCount').textContent = `${filtered.length} expense${filtered.length!==1?'s':''}`;
+  document.getElementById('footerTotal').textContent = `Total: ${fmt(filteredTotal)}`;
+  footer.style.display='flex';
+}
+
+function renderPaymentLog() {
+  const el = document.getElementById('paymentLog');
+  if (paymentTxns.length===0) {
+    el.innerHTML='<div class="log-empty">No payments logged yet.</div>'; return;
+  }
+  // Show newest first
+  const sorted = [...paymentTxns].reverse();
+  el.innerHTML = sorted.map(p => {
+    const isJ2G = p.direction==='j2g';
+    const label = isJ2G ? 'Jayat → Gaurav' : 'Gaurav → Jayat';
+    const cls   = isJ2G ? 'j2g' : 'g2j';
+    const icon  = isJ2G ? '💜' : '💙';
+    return `
+      <div class="log-entry">
+        <div class="log-direction">${icon}</div>
+        <div class="log-info">
+          <div class="log-desc ${cls}">${label}</div>
+          ${p.note ? `<div class="log-note">${p.note}</div>` : ''}
+          <div class="log-date">${fmtDate(p.createdAt)}</div>
+        </div>
+        <div class="log-amount ${cls}">${fmt(p.amount)}</div>
+        <button class="btn-log-del" onclick="window._delPayment('${p.id}')">✕</button>
+      </div>`;
+  }).join('');
+}
+
+// ── Expense CRUD ─────────────────────────────────────────────────
+window._setFilter = f => { filter=f; render(); };
+
+window.toggleForm = function() {
+  const form = document.getElementById('expenseForm');
+  if (form.classList.contains('open')) { cancelForm(); return; }
+  editId=null;
+  document.getElementById('fDesc').value='';
+  document.getElementById('fAmount').value='';
+  document.getElementById('fPaidBy').value='Jayat';
+  document.getElementById('fCategory').value='Other';
+  document.getElementById('btnSave').textContent='Add';
+  form.classList.add('open');
+  document.getElementById('fDesc').focus();
+};
+
+window.cancelForm = function() {
+  document.getElementById('expenseForm').classList.remove('open'); editId=null;
+};
+
+window.submitForm = async function() {
+  const desc=document.getElementById('fDesc').value.trim();
+  const amount=parseFloat(document.getElementById('fAmount').value);
+  const paidBy=document.getElementById('fPaidBy').value;
+  const category=document.getElementById('fCategory').value;
+  if (!desc||isNaN(amount)||amount<=0) return;
+  if (editId) {
+    await updateDoc(doc(db,'expenses',editId),{description:desc,total:amount,paidBy,category});
+    editId=null;
+  } else {
+    await addDoc(EXPENSES_COL,{description:desc,total:amount,paidBy,category,createdAt:serverTimestamp()});
+  }
+  cancelForm();
+};
+
+window._editExp = function(id) {
+  const exp=expenses.find(e=>e.id===id); if(!exp) return;
+  editId=id;
+  document.getElementById('fDesc').value=exp.description;
+  document.getElementById('fAmount').value=exp.total;
+  document.getElementById('fPaidBy').value=exp.paidBy;
+  document.getElementById('fCategory').value=exp.category;
+  document.getElementById('btnSave').textContent='Save Changes';
+  document.getElementById('expenseForm').classList.add('open');
+  document.getElementById('fDesc').focus();
+};
+
+window._delExp = async function(id) {
+  if (!confirm('Delete this expense?')) return;
+  await deleteDoc(doc(db,'expenses',id));
+};
+
+// ── Payment Modal ─────────────────────────────────────────────────
+window.openPaymentModal = function(direction) {
+  paymentDirection = direction;
+  document.getElementById('inpAmount').value='';
+  document.getElementById('inpNote').value='';
+  updateDirectionUI();
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('inpAmount').focus();
+};
+
+window.setDirection = function(dir) {
+  paymentDirection = dir;
+  updateDirectionUI();
+};
+
+function updateDirectionUI() {
+  const j2g = paymentDirection==='j2g';
+  document.getElementById('dirJ2G').className = 'dir-btn' + (j2g?' active-j2g':'');
+  document.getElementById('dirG2J').className = 'dir-btn' + (!j2g?' active-g2j':'');
+  const inp = document.getElementById('inpAmount');
+  inp.className = j2g ? 'inp-j2g' : 'inp-g2j';
+  document.getElementById('amountLabel').className = j2g ? 'lbl-j2g' : 'lbl-g2j';
+  document.getElementById('modalTitle').textContent = j2g ? '💜 Log Payment: Jayat → Gaurav' : '💙 Log Payment: Gaurav → Jayat';
+}
+
+window.savePayment = async function() {
+  const amount = parseFloat(document.getElementById('inpAmount').value);
+  const note   = document.getElementById('inpNote').value.trim();
+  if (isNaN(amount)||amount<=0) { document.getElementById('inpAmount').focus(); return; }
+  await addDoc(PAYMENTS_COL, {
+    direction: paymentDirection,
+    amount,
+    note: note||'',
+    createdAt: serverTimestamp(),
+  });
+  closeModal();
+};
+
+window._delPayment = async function(id) {
+  if (!confirm('Delete this payment entry?')) return;
+  await deleteDoc(doc(db,'payments',id));
+};
+
+window.closeModal = function() {
+  document.getElementById('modalOverlay').classList.remove('open');
+};
+
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target===document.getElementById('modalOverlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
