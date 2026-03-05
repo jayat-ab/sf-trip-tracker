@@ -351,9 +351,9 @@ function renderSummary() {
   const gauravPaid = expenses.filter(e=>e.paidBy==="Gaurav").reduce((s,e)=>s+e.total,0);
   const total = expenses.reduce((s,e)=>s+e.total,0);
   const each  = total/2;
-  const j2g = paymentTxns.filter(p=>p.direction==='j2g').reduce((s,p)=>s+p.amount,0);
-  const g2j = paymentTxns.filter(p=>p.direction==='g2j').reduce((s,p)=>s+p.amount,0);
-  const net = (jayatPaid - each) + j2g - g2j;
+  const j2g = paymentTxns.filter(p=>p.direction==='j2g').reduce((s,p)=>s+(p.amount||0),0);
+  const g2j = paymentTxns.filter(p=>p.direction==='g2j').reduce((s,p)=>s+(p.amount||0),0);
+  const net = Math.round(((jayatPaid - each) + j2g - g2j) * 100) / 100;
 
   document.getElementById('totalShared').textContent  = fmt(total);
   document.getElementById('eachOwes').textContent     = fmt(each);
