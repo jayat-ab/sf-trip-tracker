@@ -367,7 +367,7 @@ function renderSummary() {
   const amt    = document.getElementById('settlementAmount');
   document.getElementById('settlementSub').textContent = `Each family's share: ${fmt(each)}`;
 
-  if (net===0) {
+  if (Math.abs(net) < 0.01) {
     banner.className='settlement even'; msg.textContent='✅ Fully settled up!'; amt.style.display='none';
   } else if (net>0) {
     banner.className='settlement owed'; msg.textContent='💸 Gaurav still owes Jayat';
